@@ -1,4 +1,4 @@
-package app;
+package com.carePrint.app;
 
 public class HelloWorld {
 	private final long id;

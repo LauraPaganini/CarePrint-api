@@ -1,4 +1,4 @@
-package app;
+package com.carePrint.app;
 
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.web.bind.annotation.RequestMapping;
