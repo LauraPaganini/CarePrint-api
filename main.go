@@ -1,16 +1,21 @@
 package main
 
 import (
-    "log"
-    "net/http"
-    "github.com/gorilla/mux"
+	"log"
+	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
-// our main function
-func main() {
-	router := mux.NewRouter()
-	router.HandleFunc("/people", GetFoo).Methods("GET")
-    log.Fatal(http.ListenAndServe(":8000", router))
+func YourHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Gorilla!\n"))
 }
 
-func GetFoo (w http.ResponseWriter, r *http.Request) {}
+func main() {
+	r := mux.NewRouter()
+	// Routes consist of a path and a handler function.
+	r.HandleFunc("/", YourHandler)
+
+	// Bind to a port and pass our router in
+	log.Fatal(http.ListenAndServe(":8000", r))
+}
