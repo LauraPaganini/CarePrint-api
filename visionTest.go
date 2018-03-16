@@ -11,7 +11,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-func main() {
+func visionAPITest() {
 	ctx := context.Background()
 
 	// Creates a client.
