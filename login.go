@@ -8,11 +8,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type loginRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
 func hashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
@@ -21,6 +16,11 @@ func hashPassword(password string) (string, error) {
 func checkPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+type loginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 // LoginHandler is called from /login
@@ -35,10 +35,24 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	hash, _ := hashPassword(request.Password)
-
-	fmt.Println("Password:", request.Password)
-	fmt.Println("Hash:    ", hash)
-
 	match := checkPasswordHash(request.Password, hash)
-	fmt.Println("Match:   ", match)
+	fmt.Println(fmt.Sprintf("login %v", match))
+}
+
+// CreateAccountHandler is called from /login/create
+func CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
+	open()
+
+	// decoder := json.NewDecoder(r.Body)
+
+	// var request loginRequest
+	// err := decoder.Decode(&request)
+
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	// hash, _ := hashPassword(request.Password)
+	// fmt.Println("create" + hash)
+	w.WriteHeader(http.StatusOK)
 }
