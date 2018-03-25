@@ -41,18 +41,20 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 // CreateAccountHandler is called from /login/create
 func CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
-	open()
+	decoder := json.NewDecoder(r.Body)
 
-	// decoder := json.NewDecoder(r.Body)
+	var request loginRequest
+	err := decoder.Decode(&request)
 
-	// var request loginRequest
-	// err := decoder.Decode(&request)
+	if err != nil {
+		panic(err)
+	}
 
-	// if err != nil {
-	// 	panic(err)
-	// }
+	hash, _ := hashPassword(request.Password)
+	fmt.Println("create" + hash)
 
-	// hash, _ := hashPassword(request.Password)
-	// fmt.Println("create" + hash)
+	dbStatement := "INSERT INTO Accounts VALUES (" + request.Email + ", " + hash + ");"
+	modifyData(dbStatement)
+
 	w.WriteHeader(http.StatusOK)
 }

@@ -13,9 +13,8 @@ import (
 )
 
 func main() {
-	//create channels to catch CTRL+C to shutdown server
+	//create channel to catch CTRL+C to shutdown server
 	sigs := make(chan os.Signal, 1)
-	// done := make(chan bool, 1)
 
 	// `signal.Notify` registers the given channel to
 	// receive notifications of the specified signals.
@@ -31,20 +30,17 @@ func main() {
 		Handler: r, // Pass our instance of gorilla/mux in.
 	}
 
-	// This goroutine executes a blocking receive for
-	// signals. When it gets one it'll print it out
-	// and then notify the program that it can finish.
 	go func() {
 		// The program will wait here until it gets the
 		// expected signal and then exit.
 		<-sigs
-		fmt.Println("shutdown")
 		ctx := context.Background()
 		srv.Shutdown(ctx)
-		close()
+		closeDatabaseConnection()
 		os.Exit(3)
 	}()
 
 	fmt.Println("serving...")
+	openDatabaseConnection()
 	log.Fatal(srv.ListenAndServe())
 }

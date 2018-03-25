@@ -15,7 +15,7 @@ const dbName = "careprint-db"
 
 var db *sql.DB
 
-func open() {
+func openDatabaseConnection() {
 	var err error
 	db, err = sql.Open("mssql",
 		"server="+endpoint+";user id="+user+";password="+pass+";")
@@ -25,15 +25,25 @@ func open() {
 
 	err = db.Ping()
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 }
 
-func close() {
+func closeDatabaseConnection() {
 	if db != nil {
 		err := db.Close()
 		if err != nil {
-			fmt.Println(err)
+			log.Fatal(err)
 		}
+	}
+}
+
+func modifyData(statement string) {
+	stmt, err := db.Prepare(statement)
+	_, err = stmt.Exec()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("done: " + statement)
 	}
 }
