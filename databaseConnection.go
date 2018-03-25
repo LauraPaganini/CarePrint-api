@@ -30,8 +30,10 @@ func open() {
 }
 
 func close() {
-	err := db.Close()
-	if err != nil {
-		fmt.Println(err)
+	if db != nil {
+		err := db.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
