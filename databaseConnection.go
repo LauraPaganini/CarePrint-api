@@ -18,7 +18,7 @@ var db *sql.DB
 func openDatabaseConnection() {
 	var err error
 	db, err = sql.Open("mssql",
-		"server="+endpoint+";user id="+user+";password="+pass+";")
+		"server="+endpoint+";user id="+user+";password="+pass+";database="+dbName+";")
 	if err != nil {
 		log.Fatal(err)
 	}
