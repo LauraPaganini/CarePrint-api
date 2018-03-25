@@ -40,10 +40,15 @@ func closeDatabaseConnection() {
 
 func modifyData(statement string) {
 	stmt, err := db.Prepare(statement)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("prepped: " + statement)
+	}
 	_, err = stmt.Exec()
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println("done: " + statement)
+		fmt.Println("executed: " + statement)
 	}
 }
