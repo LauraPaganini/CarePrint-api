@@ -44,11 +44,11 @@ func main() {
 	log.Fatal(srv.ListenAndServe())
 
 	// The program will wait here until it gets the
-	// expected signal (as indicated by the goroutine
-	// above sending a value on `done`) and then exit.
+	// expected signal and then exit.
 	<-sigs
-	ctx := context.Background()
 	fmt.Println("shutdown")
+	ctx := context.Background()
 	srv.Shutdown(ctx)
 	close()
+	os.Exit(3)
 }
