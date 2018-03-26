@@ -51,9 +51,10 @@ func CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	hash, _ := hashPassword(request.Password)
-	fmt.Println("create")
+	fmt.Println("create "+hash)
 
-	dbStatement := "INSERT INTO dbo.Accounts (Email, PasswordHash) VALUES (" + request.Email + ", " + hash + ");"
+	dbStatement := "INSERT INTO dbo.Accounts (Email, PasswordHash) VALUES ('" + request.Email + "', '" + request.Password + "');"
+	//dbStatement := "SELECT * FROM dbo.Accounts;"
 	modifyData(dbStatement)
 
 	w.WriteHeader(http.StatusOK)

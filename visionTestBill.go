@@ -7,7 +7,7 @@ import (
 	vision "cloud.google.com/go/vision/apiv1"
 	"golang.org/x/net/context"
 )
-func main() {
+func notmain() {
         fmt.Println(detectText())
 }
 
@@ -18,7 +18,7 @@ func detectText() error {
         if err != nil {
                 return err
         }
-        filename := "testdata/test-bill.jpg"
+        filename := "testdata/bill-2.jpg"
 
         f, err := os.Open(filename)
         println(filename)
@@ -31,7 +31,7 @@ func detectText() error {
         if err != nil {
                 return err
         }
-        annotations, err := client.DetectTexts(ctx, image, nil, 10)
+        annotations, err := client.DetectTexts(ctx, image, nil, 100)
         if err != nil {
                 return err
         }
@@ -41,7 +41,7 @@ func detectText() error {
         } else {
                 println("Text:")
                 for _, annotation := range annotations {
-                        fmt.Println("%q\n", annotation.Description)
+                        fmt.Println("\n", annotation.Description)
                 }
         }
 
