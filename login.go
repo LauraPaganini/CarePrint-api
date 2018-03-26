@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
@@ -31,12 +32,24 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&request)
 
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	hash, _ := hashPassword(request.Password)
-	match := checkPasswordHash(request.Password, hash)
-	fmt.Println(fmt.Sprintf("login %v", match))
+	rows := retrieveData("SELECT PasswordHash FROM dbo.Accounts WHERE Email is " + request.Email)
+
+	defer rows.Close()
+
+	var passwordHash string
+	for rows.Next() {
+		if err := rows.Scan(&passwordHash); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	requestHash, _ := hashPassword(request.Password)
+	match := checkPasswordHash(passwordHash, requestHash)
+
+	fmt.Print(match)
 }
 
 // CreateAccountHandler is called from /login/create
@@ -47,15 +60,18 @@ func CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&request)
 
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	hash, _ := hashPassword(request.Password)
-	fmt.Println("create "+hash)
+	fmt.Println("create " + hash)
 
 	dbStatement := "INSERT INTO dbo.Accounts (Email, PasswordHash) VALUES ('" + request.Email + "', '" + hash + "');"
-	//dbStatement := "SELECT * FROM dbo.Accounts;"
-	modifyData(dbStatement)
+	err = modifyData(dbStatement)
 
-	w.WriteHeader(http.StatusOK)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+	} else {
+		w.WriteHeader(http.StatusOK)
+	}
 }
