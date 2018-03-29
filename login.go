@@ -49,7 +49,11 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	requestHash, _ := hashPassword(request.Password)
 	match := checkPasswordHash(passwordHash, requestHash)
 
-	fmt.Print(match)
+	if match {
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusUnauthorized)
+	}
 }
 
 // CreateAccountHandler is called from /login/create
