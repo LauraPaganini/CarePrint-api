@@ -35,7 +35,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	rows := retrieveData("SELECT PasswordHash FROM dbo.Accounts WHERE Email is " + request.Email)
+	rows := retrieveData("SELECT PasswordHash FROM dbo.Accounts WHERE Email='" + request.Email +"';")
 
 	defer rows.Close()
 
@@ -46,8 +46,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	requestHash, _ := hashPassword(request.Password)
-	match := checkPasswordHash(passwordHash, requestHash)
+	match := checkPasswordHash(request.Password, passwordHash)
 
 	if match {
 		w.WriteHeader(http.StatusOK)
