@@ -22,6 +22,7 @@ func main() {
 
 	r := mux.NewRouter()
 	// Routes consist of a path and a handler function.
+	r.HandleFunc("/", corsHandler).Methods("OPTIONS")
 	r.HandleFunc("/login", LoginHandler)
 	r.HandleFunc("/login/create", CreateAccountHandler)
 
@@ -43,4 +44,9 @@ func main() {
 	fmt.Println("serving...")
 	openDatabaseConnection()
 	log.Fatal(srv.ListenAndServe())
+}
+
+func corsHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("cors")
+	w.WriteHeader(http.StatusOK)
 }
