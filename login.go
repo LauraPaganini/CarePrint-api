@@ -50,26 +50,31 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("login")
 
+	type res struct {
+		Status string `json:"status"`
+	}
+
+	var jData []byte
 	if match {
-		type res struct {
-			Status string `json:"status"`
+		jData, err = json.Marshal(res{Status: "success"})
+		if err != nil {
+			fmt.Print(err)
+			return
 		}
 
-		jData, err := json.Marshal(res{Status: "success"})
-		if err != nil {
-    			fmt.Print(err)
-    			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-		w.Write(jData)
-	//	w.WriteHeader(http.StatusOK)
 	} else {
-		w.WriteHeader(http.StatusUnauthorized)
+		jData, err = json.Marshal(res{Status: "failure"})
+		if err != nil {
+			fmt.Print(err)
+			return
+		}
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	w.Write(jData)
 }
 
 // CreateAccountHandler is called from /login/create
