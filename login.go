@@ -24,6 +24,10 @@ type loginRequest struct {
 	Password string `json:"password"`
 }
 
+type response struct {
+	Status string `json:"status"`
+}
+
 // LoginHandler is called from /login
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
@@ -50,20 +54,16 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("login")
 
-	type res struct {
-		Status string `json:"status"`
-	}
-
 	var jData []byte
 	if match {
-		jData, err = json.Marshal(res{Status: "success"})
+		jData, err = json.Marshal(response{Status: "success"})
 		if err != nil {
 			fmt.Print(err)
 			return
 		}
 
 	} else {
-		jData, err = json.Marshal(res{Status: "failure"})
+		jData, err = json.Marshal(response{Status: "failure"})
 		if err != nil {
 			fmt.Print(err)
 			return
@@ -94,9 +94,25 @@ func CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 	dbStatement := "INSERT INTO dbo.Accounts (Email, PasswordHash) VALUES ('" + request.Email + "', '" + hash + "');"
 	err = modifyData(dbStatement)
 
+	var jData []byte
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		jData, err = json.Marshal(response{Status: "success"})
+		if err != nil {
+			fmt.Print(err)
+			return
+		}
+
 	} else {
-		w.WriteHeader(http.StatusOK)
+		jData, err = json.Marshal(response{Status: "failure"})
+		if err != nil {
+			fmt.Print(err)
+			return
+		}
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	w.Write(jData)
 }
