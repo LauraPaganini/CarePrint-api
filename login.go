@@ -96,14 +96,14 @@ func CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 
 	var jData []byte
 	if err != nil {
-		jData, err = json.Marshal(response{Status: "success"})
+		jData, err = json.Marshal(response{Status: "failure"})
 		if err != nil {
 			fmt.Print(err)
 			return
 		}
 
 	} else {
-		jData, err = json.Marshal(response{Status: "failure"})
+		jData, err = json.Marshal(response{Status: "success"})
 		if err != nil {
 			fmt.Print(err)
 			return
