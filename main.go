@@ -25,6 +25,7 @@ func main() {
 	r.Methods("OPTIONS").HandlerFunc(corsHandler)
 	r.HandleFunc("/login", LoginHandler)
 	r.HandleFunc("/login/create", CreateAccountHandler)
+	r.HandleFunc("/upload", ImageUploadHandler)
 
 	srv := &http.Server{
 		Addr:    ":8000",
@@ -48,7 +49,7 @@ func main() {
 
 func corsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-    	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	w.WriteHeader(http.StatusOK)
 }
