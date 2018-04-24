@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -13,17 +13,17 @@ import (
 // ImageUploadHandler is called from /upload
 func ImageUploadHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
+	fmt.Println("upload")
+	body, err := ioutil.ReadAll(r.Body)
 
+	fmt.Println(body)
 	// Creates a client.
 	client, err := vision.NewImageAnnotatorClient(ctx)
 	if err != nil {
 		log.Fatalf("Failed to create client: %v", err)
 	}
 
-	var file io.Reader
-	file = r.Body
-
-	image, err := vision.NewImageFromReader(file)
+	image, err := vision.NewImageFromReader(r.Body)
 	if err != nil {
 		log.Fatalf("Failed to create image: %v", err)
 	}
