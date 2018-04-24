@@ -1,8 +1,8 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -14,16 +14,16 @@ import (
 func ImageUploadHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	fmt.Println("upload")
-	body, err := ioutil.ReadAll(r.Body)
 
-	fmt.Println(body)
+	decoder := base64.NewDecoder(base64.StdEncoding, r.Body)
+
 	// Creates a client.
 	client, err := vision.NewImageAnnotatorClient(ctx)
 	if err != nil {
 		log.Fatalf("Failed to create client: %v", err)
 	}
 
-	image, err := vision.NewImageFromReader(r.Body)
+	image, err := vision.NewImageFromReader(decoder)
 	if err != nil {
 		log.Fatalf("Failed to create image: %v", err)
 	}
