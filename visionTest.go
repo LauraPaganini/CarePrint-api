@@ -10,6 +10,10 @@ import (
 	vision "cloud.google.com/go/vision/apiv1"
 	"golang.org/x/net/context"
 )
+func main() {
+visionAPITest()
+//do something with a
+}
 
 func visionAPITest() {
 	ctx := context.Background()
