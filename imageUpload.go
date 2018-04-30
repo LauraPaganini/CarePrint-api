@@ -106,7 +106,7 @@ func detectText(ctx context.Context, reader io.Reader) (*BillData, error) {
 			if annotation.Description == "Description:" {
 				for index2, annotation2 := range annotations {
 					if index2 == index+1 {
-						testBill.ServiceDescription = annotation2.Description + "I"
+						testBill.ServiceDescription = annotation2.Description
 					}
 				}
 			}
@@ -119,6 +119,6 @@ func detectText(ctx context.Context, reader io.Reader) (*BillData, error) {
 			}
 		}
 	}
-
+	fmt.Println(testBill)
 	return &testBill, nil
 }
